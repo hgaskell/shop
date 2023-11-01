@@ -4,8 +4,6 @@
                 <p class="footer-heading">Shop</p>
                 <div class="footer-text">
                     <p>Example Text</p>
-                    <p>Example Text</p>
-                    <p>Example Text</p>
                 </div>
             </div>
             <div class="footer-column">
@@ -34,10 +32,11 @@
         <div class="footer-bottom">
             <p>Copyright &copy; Your Website 2030</p>
         </div>
-        <!-- <?php echo '<pre>';
-        var_dump($_SESSION);
-        echo '</pre>';
-        ?> -->
+        <?php
+        // echo '<pre>';
+        // var_dump($_SESSION);
+        // echo '</pre>';
+        ?>
     </footer>
 
 <script src="js/jquery.js"></script>

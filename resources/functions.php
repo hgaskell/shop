@@ -77,10 +77,20 @@ function get_products($limit)
 
     while ($row = fetch_array($query)) {
         $product_image = display_product_image($row["product_image"]);
+        $product_image2 = display_product_image($row["product_image_2"]);
 
         $product = <<<DELIMETER
 <div class="product-tile">
-    <a href="item.php?id={$row["product_id"]}"><img class="img-tile" src="../resources/{$product_image}" alt=""></a>
+    <a class="image-container" href="item.php?id={$row["product_id"]}">
+        <div class="image-flip">
+            <div class="front-image">
+                <img class="img-tile" src="../resources/{$product_image}" alt="">
+            </div>
+            <div class="back-image">
+                <img class="img-tile" src="../resources/{$product_image2}" alt="">
+            </div>
+        </div>
+    </a>
     <div class="product-info">
         <div>
             <h4><a href="item.php?id={$row["product_id"]}">{$row["product_title"]}</a></h4>
@@ -168,9 +178,19 @@ function get_products_from_category($sort)
 
     while ($row = fetch_array($query)) {
         $product_image = display_product_image($row["product_image"]);
+        $product_image2 = display_product_image($row["product_image_2"]);
         $products = <<<DELIMETER
 <div class="product-tile">
-    <a href="item.php?id={$row["product_id"]}"><img class="img-tile" src="../resources/{$product_image}" alt=""></a>
+    <a href="item.php?id={$row["product_id"]}">
+        <div class="image-flip">
+            <div class="front-image">
+                <img class="img-tile" src="../resources/{$product_image}" alt="">
+            </div>
+            <div class="back-image">
+                <img class="img-tile" src="../resources/{$product_image2}" alt="">
+            </div>
+        </div>
+    </a>
     <div class="product-info">
         <div>
             <h4><a href="item.php?id={$row["product_id"]}">{$row["product_title"]}</a></h4>
@@ -191,22 +211,32 @@ function get_all_products($sort)
 
     while ($row = fetch_array($query)) {
         $product_image = display_product_image($row["product_image"]);
-
+        $product_image2 = display_product_image($row["product_image_2"]);
+        
         $products = <<<DELIMETER
-<div class="product-tile">
-    <a href="item.php?id={$row["product_id"]}"><img class="img-tile" src="../resources/{$product_image}" alt=""></a>
-    <div class="product-info">
-        <div>
-            <h4><a href="item.php?id={$row["product_id"]}">{$row["product_title"]}</a></h4>
-            <h4 class="">&#8364;{$row["product_price"]}</h4>
-        </div>
-    </div>
-</div>
+                <div class="product-tile">
+                    <a href="item.php?id={$row["product_id"]}">
+                        <div class="image-flip">
+                            <div class="front-image">
+                                <img class="img-tile" src="../resources/{$product_image}" alt="">
+                            </div>
+                            <div class="back-image">
+                                <img class="img-tile" src="../resources/{$product_image2}" alt="">
+                            </div>
+                        </div>
+                    </a>
+                    <div class="product-info">
+                        <div>
+                            <h4><a href="item.php?id={$row["product_id"]}">{$row["product_title"]}</a></h4>
+                            <h4 class="">&#8364;{$row["product_price"]}</h4>
+                        </div>
+                    </div>
+                </div>
 DELIMETER;
 
         echo $products;
     }
-}
+} 
 
 function login_user()
 {
@@ -250,6 +280,14 @@ function login_user()
     }
 }
 
+function email_exists($email)
+{
+    $query = query("SELECT * FROM users WHERE user_email = '{$email}'");
+    validateQuery($query);
+
+    return (mysqli_num_rows($query) > 0); // Return true if the email exists, false otherwise
+}
+
 function register_user()
 {
     if (isset($_POST["submit-register"])) {
@@ -268,6 +306,14 @@ function register_user()
             $user_lastname = escape_string($user_lastname);
             $email = escape_string($email);
             $password = escape_string($password);
+
+            // Check if email already exists in the database
+            $emailExists = email_exists($email);
+            if ($emailExists) {
+                set_message("<p class='unsuccessful-message'>Email already exists!</p>");
+                redirect("index.php"); // Redirect to appropriate page
+                return; // Stop further execution
+            }
 
             $query = query("SELECT randSalt FROM users");
             validateQuery($query);
@@ -308,6 +354,38 @@ function register_user()
             $_SESSION["user_role"] = $db_role;
         }
     }
+}
+
+function storeOrderAddress()
+{
+    //session_unset();
+    //echo "continue clicked!";
+    if(isset($_POST['continue'])){
+        $_SESSION["order_first_name"] = $_POST["first_name"];
+        $_SESSION["order_last_name"] = $_POST["last_name"];
+        $_SESSION["order_telephone"] = $_POST["telephone"];
+        $_SESSION["order_address1"] = $_POST["address1"];
+        $_SESSION["order_city"] = $_POST["city"];
+        $_SESSION["order_postcode"] = $_POST["zip"];
+    }
+
+    if(isset($_POST['edit'])){
+        unset($_SESSION['order_first_name']);
+        unset($_SESSION['order_last_name']);
+        unset($_SESSION['order_telephone']);
+        unset($_SESSION['order_address1']);
+        unset($_SESSION['order_city']);
+        unset($_SESSION['order_postcode']);
+    }
+
+    // if(isset($_['first_name'])){
+    //     echo "continue clicked!";
+    //     $_SESSION["order_first_name"] = $_GET["first_name"];
+    //     $_SESSION["order_last_name"] = $_GET["last_name"];
+    //     $_SESSION["order_address1"] = $_GET["address1"];
+    //     $_SESSION["order_city"] = $_GET["city"];
+    //     $_SESSION["order_postcode"] = $_GET["zip"];
+    // }
 }
 
 function send_message()

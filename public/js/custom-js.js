@@ -46,7 +46,7 @@ $(".register-header").click(function(){
         $(".register-form").hide();
         $(".login-section").show();
         $(".login-header h2").text("Login");
-        $("register-message p").text("Not signed in? Click the button below and register.");
+        $(".register-message p").text("Not signed in? Click the button below and register.");
         $(".register-header h2").text("Register");
 
     } else {

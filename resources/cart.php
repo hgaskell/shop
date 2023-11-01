@@ -72,8 +72,6 @@
                         $product_image = display_product_image($row['product_image']);
                         
                         $basket = <<<DELIMETER
-
-
                         <div class="cart-table">
                         <div class="table-row">
                             <div class="table-row-item">
@@ -112,8 +110,6 @@
                         <input type="hidden" name="amount_{$amount}" value="{$row['product_price']}">
                         <input type="hidden" name="quantity_{$quantity}" value="{$value}">
 
-
-
                         DELIMETER;
 
                         echo $basket;
@@ -122,7 +118,6 @@
                         $item_number ++;
                         $amount ++;
                         $quantity ++;
-                        
                     }
                     $_SESSION['grand_total'] = $total += $subTotal;
                     $_SESSION['basket_quantity'] = $item_quantity;
@@ -133,15 +128,23 @@
 
     function show_paypal_button(){
 
-        if(isset($_SESSION['basket_quantity']) && $_SESSION['basket_quantity'] >= 1){
+        if(isset($_SESSION['basket_quantity']) && $_SESSION['basket_quantity'] >= 1 && isset($_SESSION['order_first_name']) && $_SESSION['order_first_name'] != '' ){
 
             $paypal_button = <<<DELIMETER
-            <input type="image" name="upload" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
+            <input class="payPal-btn" type="image" name="upload" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
             DELIMETER;
             // <input type="image" name="upload" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online">
 
             return $paypal_button;
         }
+    }
+
+    function order_exists($order)
+    {
+        $query = query("SELECT * FROM orders WHERE order_transaction_id = '{$order}'");
+        validateQuery($query);
+
+        return (mysqli_num_rows($query) > 0); // Return true if the order exists, false otherwise
     }
 
     function submit_order(){
@@ -153,13 +156,27 @@
             $transaction_id = $_GET['tx'];
             $status         = $_GET['st'];
 
+            $order_first_name = $_SESSION['order_first_name'];
+            $order_last_name  = $_SESSION['order_last_name'];
+            $order_address1   = $_SESSION['order_address1'];
+            $order_city       = $_SESSION['order_city'];
+            $order_postcode   = $_SESSION['order_postcode'];
+
             if(isset($_SESSION['user_id'])){
                 $customer_id = $_SESSION['user_id'];
             } else {
                 $customer_id = 0;
             }
+
+            // Check if order already exists in the database
+            $orderExists = order_exists($transaction_id);
+            if ($orderExists) {
+                redirect("index.php"); // Redirect to appropriate page
+                return; // Stop further execution
+            }
+
             //ADD ORDER DETAILS TO ORDER TABLE
-            $send_order = query("INSERT INTO orders (order_amount, order_transaction_id, order_status, order_currency, customer_id) VALUES('{$amount}','{$transaction_id}','{$status}','{$currency}','{$customer_id}')");
+            $send_order = query("INSERT INTO orders (order_amount, order_transaction_id, order_status, order_currency, customer_id, order_first_name, order_last_name, order_address1, order_city, order_postcode) VALUES('{$amount}','{$transaction_id}','{$status}','{$currency}','{$customer_id}','{$order_first_name}','{$order_last_name}','{$order_address1}','{$order_city}','{$order_postcode}')");
             $last_id =  last_id();
             validateQuery($send_order);
 
@@ -189,7 +206,20 @@
                     }
                 }
             }
-            session_destroy();
+            //session_destroy();
+            foreach ($_SESSION as $name => $value) {
+                if (strpos($name, 'product_') === 0) {
+                    unset($_SESSION[$name]);
+                }
+            }
+            unset($_SESSION['grand_total']);
+            unset($_SESSION['basket_quantity']);
+            unset($_SESSION['order_first_name']);
+            unset($_SESSION['order_last_name']);
+            unset($_SESSION['order_telephone']);
+            unset($_SESSION['order_address1']);
+            unset($_SESSION['order_city']);
+            unset($_SESSION['order_postcode']);
 
         } else {
             redirect("index.php");

@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
-git remote set-url origin https://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3@github.com/hgaskell/shop.git
 <head>
 
     <meta charset="utf-8">

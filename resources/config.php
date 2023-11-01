@@ -1,4 +1,5 @@
 <?php
+//github access token - git remote set-url origin https://hgaskell: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@github.com/hgaskell/shop.git
 
 ob_start();
 

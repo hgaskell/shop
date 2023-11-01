@@ -54,8 +54,65 @@ nav {
     width:25%;
     font-size: 12px;
     text-align: center;
-    
 }
+
+@media only screen and (max-width: 600px) {
+    nav {
+        width:100%;
+        font-size: 12px;
+        text-align: center;
+    }
+    .collapse {
+        display:block;
+    }
+
+    body {
+        font-size:12px;
+    }
+
+    .product-info h4 a, footer p, footer a {
+        font-size:10px!important;
+    }
+
+    .footer ul.footer-newsletter {
+        margin:0;
+        padding:0;
+    }
+
+    div.product-data {
+        width:100%;
+    }
+
+    div.cart-totals div.cart-table-row {
+        padding:0;
+    }
+
+    .cart-totals .cart-table-row {
+        flex-direction: column;
+    }
+
+    .table-header div, .table-row div {
+        text-align: center!important;
+        padding:0!important;
+    }
+
+    .cart-title-img-row {
+        flex-direction: column;
+    }
+
+    .cart-product-img img{
+        width:100%!important;
+    }
+
+    .cart-qty{
+        justify-content: center!important;
+    }
+
+    .cart-buy-btn input {
+        width:100%;
+    }
+
+  }
 
 nav .top-level-menu {
     display: flex;
@@ -133,6 +190,8 @@ nav .dropdown-menu a {
     bottom: 16px;
     position: absolute;
     text-transform: uppercase;
+    width: 100%;
+    text-align: center;
 }
 
 .productGrid{
@@ -163,10 +222,40 @@ nav .dropdown-menu a {
     filter: brightness(150%);
 }
 
-.img-tile:hover {
+.image-flip {
+    perspective: 150rem;
+    height:52rem;
+  }
+  
+.image-flip div {
+    height: 52rem;
+    transition: all .8s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15);
+}
+
+.image-flip:hover .front-image {
+    transform: rotateY(-180deg);
+}
+.image-flip:hover .back-image {
+    transform: rotateY(0);
+}
+
+.back-image {
+    transform: rotateY(180deg);
+}
+
+/* .img-tile:hover {
     filter: brightness(100%);
     transform: scale(3);
-}
+} */
 
 .product-info {
     padding:16px;
@@ -286,7 +375,7 @@ nav .dropdown-menu a {
 
 .product-image {
     height: 100%;
-    object-fit: cover;
+    object-fit: fill;
     width: 100%;
 }
 
@@ -434,6 +523,17 @@ nav .dropdown-menu a {
     width: 0;
 }
 
+/* .container-fluid.cart {
+    height:80vh;
+    overflow-y:scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+} */
+
+.container-fluid.cart::-webkit-scrollbar {
+    display: none;
+}
+
 .cart {
     padding:0;
 }
@@ -474,6 +574,8 @@ nav .dropdown-menu a {
     background-color: #000;
 }
 
+
+
 .cart-item {
     padding-top:40px;
 }
@@ -511,7 +613,6 @@ nav .dropdown-menu a {
     align-items: center;
     text-transform: uppercase;
     font-size:12px;
-    border-bottom: 1px solid #000;
 }
 
 .cart-title-img-row {
@@ -668,4 +769,78 @@ nav .dropdown-menu a {
 
 .user-message p {
     margin:0;
+}
+
+.address-input{
+    display:flex;
+    justify-content: space-between;
+    width: 75%;
+    border-right:1px solid #000;
+}
+
+.address-names div, .address div, .address-tel div {
+    background-color: #fff;
+    text-align: left;
+    padding: 10px 16px 0 16px;
+    text-transform: uppercase;
+}
+
+.address-names div label, .address div label, .address-tel div label, .login-form label {
+    width:100%;
+    font-weight: 400;
+}
+
+.address-names label input, .address label input, .address-tel label input, .login-form input {
+    width: 100%;
+    padding-top: 5px;
+    border: none;
+    border-bottom:1px solid #000;
+    outline: none;
+}
+
+.your-details {
+    width:75%;
+    border-right: 1px solid #000;
+}
+
+.edit-payment, .continue-payment {
+    align-self: center;
+    flex-grow: 1;
+    justify-content: center;
+    display: flex;
+}
+
+.edit-payment label, .continue-payment label {
+    height: 42px;
+}
+
+.edit-payment input, .continue-payment input {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 400;
+    outline: none;
+}
+
+.menu-login {
+    display:none;
+}
+
+.heading {
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 14px;
+}
+
+.login-page {
+    width:50%;
+}
+
+.login-page .login-btn {
+    background-color: #000;
+    color: #fff;
+    text-transform: uppercase;
+    border-radius: 0;
 }

@@ -7,6 +7,18 @@
     validateQuery($query);
     while($row = fetch_array($query)):
     $product_image = display_product_image($row['product_image']);
+    $product_image2 = display_product_image($row['product_image_2']);
+    if($product_image2 == 'uploads/'){
+        $product_image2 = $product_image;
+    }
+    $product_image3 = display_product_image($row['product_image_3']);
+    if($product_image3 == 'uploads/'){
+        $product_image3 = $product_image;
+    }
+    $product_image4 = display_product_image($row['product_image_4']);
+    if($product_image4 == 'uploads/'){
+        $product_image4 = $product_image;
+    }
     $currency = setCurrency();
     $price = $row['product_price'];
     $fullPrice = $currency .  $price;
@@ -81,13 +93,13 @@
                 <img class="product-image" src="../resources/<?php echo $product_image; ?>" alt="">
             </div>
             <div class="image-block">
-                <img class="product-image" src="../resources/<?php echo $product_image; ?>" alt="">
+                <img class="product-image" src="../resources/<?php echo $product_image2; ?>" alt="">
             </div>
             <div class="image-block">
-                <img class="product-image" src="../resources/<?php echo $product_image; ?>" alt="">
+                <img class="product-image" src="../resources/<?php echo $product_image3; ?>" alt="">
             </div>
             <div class="image-block">
-                <img class="product-image" src="../resources/<?php echo $product_image; ?>" alt="">
+                <img class="product-image" src="../resources/<?php echo $product_image4; ?>" alt="">
             </div>
         </div>
     </div>
